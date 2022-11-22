@@ -1,0 +1,10 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+#root {
+    min-height: 100vh;
+    background: rgb(25,43,65);
+    background: linear-gradient(0deg, rgba(25,43,65,1) 0%, rgba(20,25,34,1) 77%);
+}
