@@ -28,9 +28,10 @@ const DatePicker = ({
     <div className={isLight ? "light-theme" : "dark-theme"}>
       <ReactDatePicker
         disabled={disabled}
-        dateFormat="dd.MM.yyyy"
+        dateFormat="dd.MM.yyyy  -  HH:mm"
         selected={selectedDate}
         onChange={onChange}
+        showTimeInput
         isClearable={isClearable}
         showPopperArrow={showPopperArrow}
         className="react-datapicker__input-text" //input is white by default and there is no already defined class for it so I created a new one

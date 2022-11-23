@@ -10,6 +10,11 @@ const date = domain.ui
   .createStore(new Date())
   .on(onDateChange, (_, date) => date)
 
+const totalsUpToDate = domain.ui
+  .createStore(false)
+  .on(contractEvents.totalsReceived, () => true)
+  .reset(onDateChange, contractEvents.accountChanged)
+
 date.watch(onFetchTotalsAt, contractEvents.totalsAtRequested)
 
 const e = {
@@ -23,10 +28,12 @@ const e = {
   onDateChange,
   onFetchTotalsAt,
   onAddClaim: contractEvents.addClaimRequested,
+  onClaim: contractEvents.claimRequested,
 }
 
 export const contractControlState = {
   $: {
+    totalsUpToDate,
     contract: contractStores.contract,
     chainId: contractStores.chainId,
     account: contractStores.account,
@@ -35,7 +42,8 @@ export const contractControlState = {
     start: contractStores.start,
     end: contractStores.end,
     totals: contractStores.totals,
-    tx: contractStores.tx,
+    txAddClaim: contractStores.txAddClaim,
+    txClaim: contractStores.txClaim,
     totalsPending: asyncLib.pendingStore({
       start: merge([
         contractEvents.totalsRequested,
@@ -49,6 +57,10 @@ export const contractControlState = {
         contractEvents.addClaimSucceeded,
         contractEvents.addClaimFailed,
       ]),
+    }),
+    claimPending: asyncLib.pendingStore({
+      start: contractEvents.claimRequested,
+      end: merge([contractEvents.claimSucceeded, contractEvents.claimFailed]),
     }),
     date,
     tabIndex: domain.ui

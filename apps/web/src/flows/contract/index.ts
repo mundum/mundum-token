@@ -1,19 +1,20 @@
+import { differenceInSeconds, getUnixTime } from "date-fns"
 import { combine, merge, sample } from "effector"
-import { BigNumber, ethers } from "ethers"
+import { ethers } from "ethers"
+import { option as O, taskEither as TE } from "fp-ts"
+import { pipe } from "fp-ts/lib/function"
 import { contractEvents as e } from "~/models/contract/events"
 import { contractFx as fx } from "~/models/contract/fx"
 import { contractStores as $ } from "~/models/contract/stores"
-import { contractService } from "~/services/contract"
-import { option as O } from "fp-ts"
-import { pipe } from "fp-ts/lib/function"
 import { envStores } from "~/models/environment/stores"
-import { getUnixTime, differenceInSeconds } from "date-fns"
+import { contractService } from "~/services/contract"
 
 export const contractFlows = {
   init() {
     connect()
     fetchTotals()
     addClaim()
+    claim()
   },
 }
 
@@ -53,6 +54,36 @@ function fetchTotals() {
   fx.connectToContract.doneData.watch(e.contractConnected)
 }
 
+function claim() {
+  combine({ contract: $.contract, account: $.account }).watch(
+    e.claimRequested,
+    ($, date) => {
+      pipe(
+        $.contract,
+        O.map(contract =>
+          pipe(
+            $.account,
+            O.map(async account => {
+              await TE.tryCatch(
+                async () => {
+                  const tx = await contractService.claim({
+                    contract,
+                    account,
+                  })
+                  e.claimSucceeded(tx)
+                },
+                async () => {
+                  e.claimFailed()
+                },
+              )()
+            }),
+          ),
+        ),
+      )
+    },
+  )
+}
+
 function addClaim() {
   combine({
     contract: $.contract,
@@ -74,15 +105,22 @@ function addClaim() {
                 pipe(
                   $.bonus,
                   O.map(async bonus => {
-                    const tx = await contractService.addClaim({
-                      benificiary,
-                      contract,
-                      amount: ethers.utils.parseEther(amount),
-                      bonusAmount: ethers.utils.parseEther(bonus),
-                      startUnix: getUnixTime($.start),
-                      durationSeconds: differenceInSeconds($.end, $.start),
-                    })
-                    e.addClaimSucceeded(tx)
+                    await TE.tryCatch(
+                      async () => {
+                        const tx = await contractService.addClaim({
+                          benificiary,
+                          contract,
+                          amount: ethers.utils.parseEther(amount),
+                          bonusAmount: ethers.utils.parseEther(bonus),
+                          startUnix: getUnixTime($.start),
+                          durationSeconds: differenceInSeconds($.end, $.start),
+                        })
+                        e.addClaimSucceeded(tx)
+                      },
+                      async () => {
+                        e.addClaimFailed()
+                      },
+                    )()
                   }),
                 ),
               ),
@@ -92,6 +130,4 @@ function addClaim() {
       ),
     )
   })
-  e.totalsRequested.watch(fx.connectToContract)
-  fx.connectToContract.doneData.watch(e.contractConnected)
 }

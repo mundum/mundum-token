@@ -43,6 +43,8 @@
   font-family: unset;
   font-size: 0.9rem;
   border-color: var(--light-gray);
+  background-color: var(--monthBackground);
+  color: var(--text);
 }
 
 .react-datepicker-wrapper,
@@ -59,6 +61,7 @@
   border: 1px solid;
   border-color: var(--light-gray);
 }
+
 .react-datapicker__input-text {
   background-color: transparent;
 }
@@ -108,7 +111,7 @@
 }
 
 .react-datepicker__current-month,
-.react-datepicker-time__header,
+.react-datepicker-time__caption,
 .react-datepicker-year-header {
   font-size: inherit;
   font-weight: 600;

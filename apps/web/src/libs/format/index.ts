@@ -31,6 +31,12 @@ function timestamp(d?: Date | null): string {
     : ""
 }
 
+function datetime(d?: Date | null): string {
+  return d
+    ? dformat(d instanceof Date ? d : parseISO(d), "dd.MM.yyyy - hh:mm")
+    : ""
+}
+
 function age(d?: Date | null): string {
   return d
     ? formatDistance(d instanceof Date ? d : parseISO(d), new Date())
@@ -42,6 +48,7 @@ export const frmt = {
   bigNumber,
   bigNumberHex,
   date,
+  datetime,
   timestamp,
   age,
   nativeNum,

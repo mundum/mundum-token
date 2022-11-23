@@ -57,8 +57,13 @@ export const contractStores = {
     .createStore<Totals>([ZERO, ZERO, ZERO, ZERO, ZERO, ZERO])
     .on(e.totalsReceived, (_, payload) => payload),
 
-  tx: domain.core
+  txAddClaim: domain.core
     .createStore<Option<string>>(O.none)
     .on(e.addClaimSucceeded, (_, payload) => O.fromNullable(payload.hash))
     .reset(e.addClaimFailed),
+
+  txClaim: domain.core
+    .createStore<Option<string>>(O.none)
+    .on(e.claimSucceeded, (_, payload) => O.fromNullable(payload.hash))
+    .reset(e.claimFailed),
 }

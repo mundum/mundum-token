@@ -125,25 +125,27 @@ export const ContractControl: React.FC = () => {
                   {$.totalsPending ? (
                     <Spinner />
                   ) : (
-                    <Stack spacing={2}>
-                      <Grid templateColumns="60% 40%">
-                        {[
-                          "Coins Total",
-                          "Coins Available",
-                          "Coins Claimed",
-                          "Bonuses Total",
-                          "Bonuses Available",
-                          "Bonuses Claimed",
-                        ].map((label, idx) => (
-                          <TotalsItem
-                            key={idx}
-                            date={$.date}
-                            label={label}
-                            item={$.totals[idx]}
-                          />
-                        ))}
-                      </Grid>
-                    </Stack>
+                    $.totalsUpToDate && (
+                      <Stack spacing={2}>
+                        <Grid templateColumns="65% 35%">
+                          {[
+                            "Coins Total",
+                            "Coins Available",
+                            "Coins Claimed",
+                            "Bonuses Total",
+                            "Bonuses Available",
+                            "Bonuses Claimed",
+                          ].map((label, idx) => (
+                            <TotalsItem
+                              key={idx}
+                              date={$.date}
+                              label={label}
+                              item={$.totals[idx]}
+                            />
+                          ))}
+                        </Grid>
+                      </Stack>
+                    )
                   )}
                 </TabPanel>
                 <TabPanel>
@@ -200,7 +202,7 @@ export const ContractControl: React.FC = () => {
                         $.chainId,
                         O.map(chainId =>
                           pipe(
-                            $.tx,
+                            $.txAddClaim,
                             O.map(tx => (
                               <Tag
                                 as="a"
@@ -218,7 +220,49 @@ export const ContractControl: React.FC = () => {
                     )}
                   </Stack>
                 </TabPanel>
-                <TabPanel>claim</TabPanel>
+                <TabPanel>
+                  {" "}
+                  <Stack spacing={3}>
+                    <FormControl>
+                      <FormLabel>Account</FormLabel>
+                      <Input
+                        value={pipe(
+                          $.account,
+                          O.getOrElseW(() => ""),
+                        )}
+                        onChange={event =>
+                          e.onAccountChange(event.currentTarget.value)
+                        }
+                      />
+                    </FormControl>
+                    <Button onClick={() => e.onClaim()}>Claim</Button>
+                    <Divider my={6} />
+                    <Heading size="sm">Tx</Heading>
+                    {$.claimPending ? (
+                      <Spinner />
+                    ) : (
+                      pipe(
+                        $.chainId,
+                        O.map(chainId =>
+                          pipe(
+                            $.txClaim,
+                            O.map(tx => (
+                              <Tag
+                                as="a"
+                                href={frmt.explorer(chainId, tx)}
+                                target="_blank"
+                              >
+                                {tx}
+                              </Tag>
+                            )),
+                            O.getOrElseW(() => "-"),
+                          ),
+                        ),
+                        O.getOrElseW(() => "-"),
+                      )
+                    )}
+                  </Stack>
+                </TabPanel>
               </TabPanels>
             </Tabs>
           </Box>
@@ -269,7 +313,7 @@ const TotalsItem: React.FC<{ label: string; item: BigNumber; date: Date }> = ({
           <HStack>
             <InfoOutlineIcon />
             <Box>{label}</Box>
-            {withDate[label] && <Box>({frmt.date(date)})</Box>}
+            {withDate[label] && <Box>({frmt.datetime(date)})</Box>}
           </HStack>
         </FormLabel>
       </Tooltip>

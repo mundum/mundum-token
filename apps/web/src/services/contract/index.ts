@@ -11,7 +11,8 @@ const vestingAbi = [
   "function totalsOfAt(address, uint128) view returns (tuple(uint, uint, uint, uint, uint, uint))",
   "function totalsOf(address) view returns (tuple(uint, uint, uint, uint, uint, uint))",
   "function addClaim(address, uint, uint, uint, uint)",
-  "function claim(address)",
+  "function claimAll(address)",
+  "function claimBonuses(address)",
   "event Vested(address indexed, uint, uint, uint, uint)",
 ]
 
@@ -92,7 +93,7 @@ async function claim({
   contract: Contract
   account: string
 }) {
-  return await contract.claim(account)
+  return await contract.claimAll(account)
 }
 
 export const contractService = {

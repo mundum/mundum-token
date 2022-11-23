@@ -16,4 +16,7 @@ export const contractEvents = {
   addClaimRequested: domain.core.createEvent(),
   addClaimSucceeded: domain.core.createEvent<Transaction>(),
   addClaimFailed: domain.core.createEvent(),
+  claimRequested: domain.core.createEvent(),
+  claimSucceeded: domain.core.createEvent<Transaction>(),
+  claimFailed: domain.core.createEvent(),
 }

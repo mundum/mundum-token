@@ -16,9 +16,12 @@ export function useContractControl() {
       end: useStore($.end),
       date: useStore($.date),
       totals: useStore($.totals),
-      tx: useStore($.tx),
+      totalsUpToDate: useStore($.totalsUpToDate),
+      txAddClaim: useStore($.txAddClaim),
+      txClaim: useStore($.txClaim),
       totalsPending: useStore($.totalsPending),
       addClaimPending: useStore($.addClaimPending),
+      claimPending: useStore($.claimPending),
     },
     e,
   }
