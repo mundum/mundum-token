@@ -1,6 +1,6 @@
 import domain from "~/domain"
 import { ContractConnection, Totals } from "~/services/contract/types"
-import { BigNumber } from "ethers"
+import { Transaction } from "ethers"
 
 export const contractEvents = {
   web3ConnectionRequested: domain.core.createEvent(),
@@ -14,5 +14,6 @@ export const contractEvents = {
   totalsAtRequested: domain.core.createEvent<Date>(),
   totalsReceived: domain.core.createEvent<Totals>(),
   addClaimRequested: domain.core.createEvent(),
-  addClaimSucceeded: domain.core.createEvent(),
+  addClaimSucceeded: domain.core.createEvent<Transaction>(),
+  addClaimFailed: domain.core.createEvent(),
 }

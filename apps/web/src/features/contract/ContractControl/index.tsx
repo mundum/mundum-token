@@ -107,7 +107,7 @@ export const ContractControl: React.FC = () => {
                       />
                     </FormControl>
                     <FormControl>
-                      <FormLabel>Time</FormLabel>
+                      <FormLabel>At Date</FormLabel>
                       <DatePicker
                         onChange={date => e.onDateChange(date as Date)}
                         selectedDate={$.date || undefined}
@@ -184,7 +184,32 @@ export const ContractControl: React.FC = () => {
                         selectedDate={$.end || undefined}
                       />
                     </FormControl>
-                    <Button onClick={() => e.onAddclaim()}>Add Claim</Button>
+                    <Button onClick={() => e.onAddClaim()}>Add Claim</Button>
+                    <Divider my={3} />
+                    <Heading size="sm">Tx</Heading>
+                    {$.addClaimPending ? (
+                      <Spinner />
+                    ) : (
+                      pipe(
+                        $.chainId,
+                        O.map(chainId =>
+                          pipe(
+                            $.tx,
+                            O.map(tx => (
+                              <Tag
+                                as="a"
+                                href={frmt.explorer(chainId, tx)}
+                                target="_blank"
+                              >
+                                {tx}
+                              </Tag>
+                            )),
+                            O.getOrElseW(() => "-"),
+                          ),
+                        ),
+                        O.getOrElseW(() => "-"),
+                      )
+                    )}
                   </Stack>
                 </TabPanel>
                 <TabPanel>claim</TabPanel>

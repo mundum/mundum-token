@@ -65,23 +65,23 @@ async function totalsOfAt({
 async function addClaim({
   contract,
   benificiary,
-  amountUnits,
+  amount,
   bonusAmount,
-  durationUnix,
   startUnix,
+  durationSeconds,
 }: {
   contract: Contract
   benificiary: string
-  amountUnits: BigNumber
+  amount: BigNumber
   startUnix: number
-  durationUnix: number
+  durationSeconds: number
   bonusAmount: BigNumber
 }) {
   return await contract.addClaim(
     benificiary,
-    amountUnits,
+    amount,
     startUnix,
-    durationUnix,
+    durationSeconds,
     bonusAmount,
   )
 }

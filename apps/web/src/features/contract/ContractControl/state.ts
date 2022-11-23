@@ -5,7 +5,10 @@ import { contractEvents } from "~/models/contract/events"
 import { contractStores } from "~/models/contract/stores"
 
 const onFetchTotalsAt = domain.ui.createEvent()
-const date = domain.ui.createStore(new Date())
+const onDateChange = domain.ui.createEvent<Date>()
+const date = domain.ui
+  .createStore(new Date())
+  .on(onDateChange, (_, date) => date)
 
 date.watch(onFetchTotalsAt, contractEvents.totalsAtRequested)
 
@@ -17,9 +20,9 @@ const e = {
   onBonusChange: contractEvents.bonusChanged,
   onStartChange: contractEvents.startChanged,
   onEndChange: contractEvents.endChanged,
-  onDateChange: domain.ui.createEvent<Date>(),
+  onDateChange,
   onFetchTotalsAt,
-  onAddclaim: contractEvents.addClaimRequested,
+  onAddClaim: contractEvents.addClaimRequested,
 }
 
 export const contractControlState = {
@@ -32,6 +35,7 @@ export const contractControlState = {
     start: contractStores.start,
     end: contractStores.end,
     totals: contractStores.totals,
+    tx: contractStores.tx,
     totalsPending: asyncLib.pendingStore({
       start: merge([
         contractEvents.totalsRequested,
@@ -39,9 +43,16 @@ export const contractControlState = {
       ]),
       end: contractEvents.totalsReceived,
     }),
+    addClaimPending: asyncLib.pendingStore({
+      start: contractEvents.addClaimRequested,
+      end: merge([
+        contractEvents.addClaimSucceeded,
+        contractEvents.addClaimFailed,
+      ]),
+    }),
     date,
     tabIndex: domain.ui
-      .createStore<number>(0)
+      .createStore<number>(1)
       .on(e.onTabChange, (_, payload) => payload),
   },
   e,
