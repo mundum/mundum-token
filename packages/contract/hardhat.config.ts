@@ -27,7 +27,7 @@ const RINKEBY_PRIVATE_KEY =
 const config: HardhatUserConfig = {
   defaultNetwork: "hardhat",
   solidity: {
-    compilers: [{ version: "0.8.16", settings: {} }],
+    compilers: [{ version: "0.8.17", settings: {} }],
   },
   networks: {
     hardhat: {

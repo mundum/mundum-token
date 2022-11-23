@@ -19,7 +19,7 @@ type ChainId = number
 
 const contractAddress: Record<ChainId, string> = {
   //   31337: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-  80001: "0x1C76F31BF9F1d356f5349c0d5B8cEEDD4a1dc567",
+  80001: "0x523520cd6a382bCc81BA43BCeeB431C8a60f85F9",
 }
 
 async function connect() {

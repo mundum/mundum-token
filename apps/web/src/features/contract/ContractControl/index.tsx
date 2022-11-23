@@ -13,6 +13,7 @@ import {
   Input,
   Spinner,
   Stack,
+  StackDivider,
   Tab,
   TabList,
   TabPanel,
@@ -20,6 +21,7 @@ import {
   Tabs,
   Tag,
   Text,
+  Tooltip,
 } from "@chakra-ui/react"
 import { option as O } from "fp-ts"
 import { pipe } from "fp-ts/lib/function"
@@ -29,6 +31,7 @@ import { Buttons } from "~/widgets/buttons"
 import DatePicker from "~/widgets/DatePicker"
 import { useContractControl } from "./hooks"
 import { AmountInput } from "~/widgets/amount"
+import { InfoOutlineIcon } from "@chakra-ui/icons"
 
 export const ContractControl: React.FC = () => {
   const { $, e } = useContractControl()
@@ -84,7 +87,7 @@ export const ContractControl: React.FC = () => {
           </Box>
         </Flex>
         <Stack w="xl">
-          <Box rounded={"lg"} bg={"gray.700"} boxShadow={"lg"} p={8}>
+          <Box rounded={"lg"} bg={"whiteAlpha.50"} boxShadow={"lg"} p={8}>
             <Tabs index={$.tabIndex} onChange={e.onTabChange}>
               <TabList>
                 <Tab>Totals</Tab>
@@ -117,15 +120,15 @@ export const ContractControl: React.FC = () => {
                       Fetch Totals
                     </Button>
                   </Stack>
-                  <Divider my={3} />
+                  <Divider my={6} />
                   <Heading size="sm">Totals</Heading>
                   {$.totalsPending ? (
                     <Spinner />
                   ) : (
                     <Stack spacing={2}>
-                      <Grid templateColumns="30% 70%">
+                      <Grid templateColumns="60% 40%">
                         {[
-                          "Coins Vested",
+                          "Coins Total",
                           "Coins Available",
                           "Coins Claimed",
                           "Bonuses Total",
@@ -134,6 +137,7 @@ export const ContractControl: React.FC = () => {
                         ].map((label, idx) => (
                           <TotalsItem
                             key={idx}
+                            date={$.date}
                             label={label}
                             item={$.totals[idx]}
                           />
@@ -156,20 +160,22 @@ export const ContractControl: React.FC = () => {
                         }
                       />
                     </FormControl>
-                    <FormControl>
-                      <FormLabel>Amount</FormLabel>
-                      <AmountInput
-                        amount={$.amount}
-                        onChange={value => e.onAmountChange(value)}
-                      />
-                    </FormControl>
-                    <FormControl>
-                      <FormLabel>Bonus</FormLabel>
-                      <AmountInput
-                        amount={$.bonus}
-                        onChange={value => e.onBonusChange(value)}
-                      />
-                    </FormControl>
+                    <HStack spacing={8}>
+                      <FormControl>
+                        <FormLabel>Amount</FormLabel>
+                        <AmountInput
+                          amount={$.amount}
+                          onChange={value => e.onAmountChange(value)}
+                        />
+                      </FormControl>
+                      <FormControl>
+                        <FormLabel>Bonus</FormLabel>
+                        <AmountInput
+                          amount={$.bonus}
+                          onChange={value => e.onBonusChange(value)}
+                        />
+                      </FormControl>
+                    </HStack>
                     <FormControl>
                       <FormLabel>Start</FormLabel>
                       <DatePicker
@@ -185,7 +191,7 @@ export const ContractControl: React.FC = () => {
                       />
                     </FormControl>
                     <Button onClick={() => e.onAddClaim()}>Add Claim</Button>
-                    <Divider my={3} />
+                    <Divider my={6} />
                     <Heading size="sm">Tx</Heading>
                     {$.addClaimPending ? (
                       <Spinner />
@@ -229,13 +235,44 @@ export const ContractControl: React.FC = () => {
   )
 }
 
-const TotalsItem: React.FC<{ label: string; item: BigNumber }> = ({
+const info: Record<string, any> = {
+  "Coins Total":
+    "Total amount of coins that can be claimed after all vesting periods.",
+  "Coins Available":
+    "Amount of coins that are available at a certain point in time. This minus coins claimed is the claimable amount.",
+  "Coins Claimed": "Amount of coins that have been claimed.",
+  "Bonuses Total":
+    "Total amount of bonuses that can be claimed during all vesting periods.",
+  "Bonuses Available":
+    "Amount of bonuses that are available at a certain point in time. This minus bonuses claimed is the claimable amount.",
+  "Bonuses Claimed": "Amount of bonuses that have been claimed.",
+}
+
+const withDate: Record<string, boolean> = {
+  "Coins Total": false,
+  "Coins Available": true,
+  "Coins Claimed": false,
+  "Bonuses Total": false,
+  "Bonuses Available": true,
+  "Bonuses Claimed": false,
+}
+
+const TotalsItem: React.FC<{ label: string; item: BigNumber; date: Date }> = ({
   label,
   item,
+  date,
 }) => {
   return (
     <>
-      <Box>{label}</Box>
+      <Tooltip label={info[label]} placement="left">
+        <FormLabel m={0} _hover={{ color: "gray.50" }}>
+          <HStack>
+            <InfoOutlineIcon />
+            <Box>{label}</Box>
+            {withDate[label] && <Box>({frmt.date(date)})</Box>}
+          </HStack>
+        </FormLabel>
+      </Tooltip>
       <Box>{frmt.units(item)}</Box>
     </>
   )

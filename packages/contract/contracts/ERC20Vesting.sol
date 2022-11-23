@@ -28,7 +28,7 @@ contract ERC20Vesting is Ownable {
     }
 
     struct Totals {
-        uint256 coinsVested;
+        uint256 coinsTotal;
         uint256 coinsAvailable;
         uint256 coinsClaimed;
         uint256 bonusesTotal;
@@ -67,7 +67,7 @@ contract ERC20Vesting is Ownable {
     {
         uint256 bonusesTotal = 0;
         uint256 bonusesAvailable = 0;
-        uint256 coinsVested = 0;
+        uint256 coinsTotal = 0;
         uint256 coinsAvailable = 0;
         for (uint256 i = 0; i < _vestings[beneficiary].length; i++) {
             Vesting memory v = _vestings[beneficiary][i];
@@ -76,12 +76,12 @@ contract ERC20Vesting is Ownable {
                 bonusesAvailable += v.bonusAmount;
             } else {
                 if (time >= v.start) {
-                    coinsVested += v.amount;
                     uint256 bonus = (v.bonusAmount * (time - v.start)) /
                         v.duration;
                     bonusesAvailable += bonus;
                 }
             }
+            coinsTotal += v.amount;
             bonusesTotal += v.bonusAmount;
         }
 
@@ -89,7 +89,7 @@ contract ERC20Vesting is Ownable {
         uint256 coinsClaimed = _coinsClaimed[beneficiary];
         return
             Totals(
-                coinsVested,
+                coinsTotal,
                 coinsAvailable,
                 coinsClaimed,
                 bonusesTotal,

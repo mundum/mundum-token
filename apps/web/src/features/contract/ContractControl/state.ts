@@ -52,7 +52,7 @@ export const contractControlState = {
     }),
     date,
     tabIndex: domain.ui
-      .createStore<number>(1)
+      .createStore<number>(0)
       .on(e.onTabChange, (_, payload) => payload),
   },
   e,

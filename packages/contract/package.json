@@ -9,7 +9,7 @@
     "compile": "npx hardhat compile",
     "test": "npx hardhat test",
     "coverage": "npm run build && npx hardhat coverage --temp artifacts --network coverage",
-    "verify:vesting:mumbai": "npx hardhat verify --network mumbai --constructor-args args-vesting.ts 0x1C76F31BF9F1d356f5349c0d5B8cEEDD4a1dc567"
+    "verify:vesting:mumbai": "npx hardhat verify --network mumbai --constructor-args args-vesting.ts 0x523520cd6a382bCc81BA43BCeeB431C8a60f85F9"
   },
   "license": "MIT",
   "devDependencies": {

@@ -6,6 +6,14 @@ export const theme = extendTheme({
     body: "Abel, sans-serif",
   },
   initialColorMode: "dark",
+  components: {
+    FormLabel: {
+      baseStyle: {
+        color: "gray.400",
+        mb: 1,
+      },
+    },
+  },
 })
 
 export default theme

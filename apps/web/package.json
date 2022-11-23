@@ -15,6 +15,7 @@
     "test:watch": "yarn test --collectCoverage=false --watch"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.0.12",
     "@chakra-ui/react": "^2.3.7",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
