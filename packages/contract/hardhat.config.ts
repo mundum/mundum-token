@@ -1,12 +1,13 @@
 import { config as dotEnvConfig } from "dotenv";
 dotEnvConfig();
 
-import { HardhatUserConfig } from "hardhat/types";
+import "@nomiclabs/hardhat-etherscan";
 import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
-import "@nomiclabs/hardhat-etherscan";
+import { HardhatUserConfig } from "hardhat/types";
 import "solidity-coverage";
 // import "hardhat-gas-reporter";
+import "@primitivefi/hardhat-dodoc";
 import "hardhat-deploy";
 import "hardhat-deploy-ethers";
 

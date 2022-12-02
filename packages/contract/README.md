@@ -8,7 +8,7 @@
 
 `npm run compile`
 
-### Run Contract Tests
+## Run Contract Tests
 
 `npm test`
 
@@ -20,10 +20,10 @@ Copy `.env-sample` to `.env` and change values according to your environment.
 
 `npx hardhat node --watch`
 
-### Ropsten
+### Mumbai Testnet
 
-`npx hardhat --network ropsten deploy`
+`npx hardhat --network mumbai deploy`
 
-### Mainnet
+### Polygon Mainnet
 
-`npx hardhat --network mainnet deploy`
+`npx hardhat --network matic deploy`

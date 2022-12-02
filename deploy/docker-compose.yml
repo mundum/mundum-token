@@ -1,0 +1,28 @@
+version: "3.7"
+
+services:
+  web:
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "5"
+    build: ../apps/web
+    restart: unless-stopped
+    networks:
+      - proxy
+      - default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_default"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-web.rule=Host(`${MUNDUM_HOST:?Please provide the host name in MUNDUM_HOST}`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-web.tls=true"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-web.entrypoints=websecure"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-web.tls.certresolver=le"
+      - "traefik.http.services.${COMPOSE_PROJECT_NAME}-web.loadbalancer.server.port=80"
+
+volumes:
+  db-data:
+
+networks:
+  proxy:
+    name: traefik_default

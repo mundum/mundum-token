@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "types": ["vite/client", "vite-plugin-svg/client"],
+    "types": ["vite/client"],
     "target": "ESNext",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": false,

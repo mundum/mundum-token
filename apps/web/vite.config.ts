@@ -11,7 +11,6 @@ export default defineConfig({
     },
   },
   plugins: [
-    reactRefresh(),
     react({
       babel: {
         plugins: ["@emotion/babel-plugin", "effector/babel-plugin"],

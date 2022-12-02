@@ -6,3 +6,4 @@ artifacts/
 coverage*
 dist/*
 .env
+docs/
