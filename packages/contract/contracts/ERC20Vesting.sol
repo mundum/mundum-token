@@ -90,6 +90,23 @@ contract ERC20Vesting is Ownable, Pausable {
 
     address public immutable rescuer;
 
+    // ======== Public Fields =========
+    /**
+     * @dev Total amount of tokens that are vested over all vestings.
+     */
+    uint256 public allTokensVested;
+
+    /**
+     * @dev Total amount of bonuses that have or will become available (claimed or not) over all vestings.
+     */
+    uint256 public allBonuses;
+    
+    /**
+     * @dev Total amount of tokens that have been claimed over all vestings.
+     */
+    uint256 public allTokensClaimed;
+
+
     // ======== Private Storage =========
 
     mapping(address => Vesting[]) private _vestings;
@@ -144,6 +161,8 @@ contract ERC20Vesting is Ownable, Pausable {
 
         Vesting[] storage vestings = _vestings[beneficiary];
         vestings.push(Vesting(amount, start, duration, bonusAmount));
+        allBonuses += bonusAmount;
+        allTokensVested += amount;
 
         emit Vested(beneficiary, amount, start, duration, bonusAmount);
     }
@@ -175,17 +194,18 @@ contract ERC20Vesting is Ownable, Pausable {
         uint256 bonusesClaimable = totals.bonusesAvailable -
             totals.bonusesClaimed;
         uint256 coinsClaimable = totals.coinsAvailable - totals.coinsClaimed;
+        uint256 tokensClaimable = coinsClaimable + bonusesClaimable;
 
         // Update claimed amounts.
         _coinsClaimed[account] += coinsClaimable;
         _bonusesClaimed[account] += bonusesClaimable;
+        allTokensClaimed += tokensClaimable;
 
         // === Interactions ===
         // Transfer claimable amount.
-        uint256 claimableAmount = coinsClaimable + bonusesClaimable;
-        ERC20(token).transfer(account, claimableAmount);
+        ERC20(token).transfer(account, tokensClaimable);
 
-        emit AllClaimed(account, claimableAmount);
+        emit AllClaimed(account, tokensClaimable);
     }
 
     /**
