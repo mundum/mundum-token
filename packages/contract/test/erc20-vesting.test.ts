@@ -169,6 +169,20 @@ describe("ERC20Vesting", () => {
       );
     });
 
+    it("should allow rescuer to rescue tokens even if contract is paused", async () => {
+      await vesting.pause();
+      await vesting.connect(rescuer).rescue();
+
+      const vestingContractBalanceAfterRescue = await mundum.balanceOf(
+        vesting.address
+      );
+      const rescuerBalanceAfterRescue = await mundum.balanceOf(rescuer.address);
+      expect(vestingContractBalanceAfterRescue).to.eq(ZERO);
+      expect(rescuerBalanceAfterRescue).to.eq(
+        INITIAL_VESTING_CONTRACT_TOKEN_BALANCE
+      );
+    });
+
     it("should not allow owner to rescue tokens", async () => {
       await expect(vesting.connect(owner).rescue()).to.be.revertedWith(
         "ERC20Vesting: Caller is not the rescuer"
@@ -182,7 +196,7 @@ describe("ERC20Vesting", () => {
     });
   });
 
-  describe("add claim", async () => {
+  describe("addClaim", async () => {
     it("should be allowed for owner", async () => {
       const { durationSeconds, bonusAmount, startSeconds, amountVested } =
         await addClaim({});
