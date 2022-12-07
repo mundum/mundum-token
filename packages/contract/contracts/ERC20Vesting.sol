@@ -230,14 +230,14 @@ contract ERC20Vesting is Ownable, Pausable {
     // ======== External View Functions =========
 
     /**
-     * @return Current statics about the vesting schedules of a beneficiary.
+     * @return Current statistics about the vesting schedules of a beneficiary.
      */
     function totalsOf(address account) external view returns (Totals memory) {
         return _totalsOfAt(account, _today());
     }
 
     /**
-     * @return Statics about the vesting schedules of a beneficiary
+     * @return Statistics about the vesting schedules of a beneficiary
      * at a certain point in time. This allows to project the future state of the vesting schedules.
      */
     function totalsOfAt(
@@ -299,6 +299,8 @@ contract ERC20Vesting is Ownable, Pausable {
                 bonusesClaimed
             );
     }
+
+    // ======== Modifiers =========
 
     modifier onlyRescuer() {
         require(
