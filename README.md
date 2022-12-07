@@ -14,7 +14,11 @@ The Mundum Token is a standard ERC20 on the Polygon network. It's deployed at
 
 ## Mundum Vesting
 
-The Mundum Vesting contract allows to create a vesting schedule for a given address. It follows a centralized approach, i.e. only the owner of the contract can create vesting schedules and release tokens to the beneficiaries.
+The [Mundum Vesting contract](packages/contract/contracts/ERC20Vesting.sol) allows to create a vesting schedule for a given address. It follows a centralized approach, i.e. only the owner of the contract can create vesting schedules and release tokens to the beneficiaries.
+
+The contract is deployed at
+
+- Polygon Testnet (Mumbai): [0xDbC1603b5c634a36380D0283EdF95a6Fa170800F](https://mumbai.polygonscan.com/address/0xDbC1603b5c634a36380D0283EdF95a6Fa170800F)
 
 ### How it works
 
